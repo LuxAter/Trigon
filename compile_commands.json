@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/main.cpp.o -c /home/arden/programming/cpp/trigon/src/main.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/main.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/log.cpp.o -c /home/arden/programming/cpp/trigon/src/util/log.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/util/log.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/time.cpp.o -c /home/arden/programming/cpp/trigon/src/util/time.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/util/time.cpp"
+}
+]
