@@ -11,13 +11,13 @@ static const char* type_string[5] = {"FATAL  ", "ERROR  ", "WARNING", "INFO   ",
 static const char* type_color[5] = {"\033[1;31m", "\033[1;31m", "\033[1;33m",
                                     "\033[1;37m", "\033[1;33m"};
 
-namespace log {
+namespace logger {
 FILE* file_ = NULL;
 bool verbose_ = false;
 bool color_ = true;
-}  // namespace log
+}  // namespace logger
 
-void log::init() {
+void logger::init() {
   char buff[255];
 #ifdef DEBUG
   snprintf(buff, 255, "log.log");
@@ -27,8 +27,8 @@ void log::init() {
   file_ = std::fopen(buff, "w");
 }
 
-void log::log(const LogType& type, const char* msg, const char* file,
-                       const char* func, size_t line, ...) {
+void logger::log(const LogType& type, const char* msg, const char* file,
+                 const char* func, size_t line, ...) {
   va_list args;
   va_start(args, line);
   char body[255];
@@ -59,4 +59,4 @@ void log::log(const LogType& type, const char* msg, const char* file,
   }
 }
 
-void log::term() { std::fclose(file_); }
+void logger::term() { std::fclose(file_); }

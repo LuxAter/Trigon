@@ -232,7 +232,9 @@ namespace tingo {
       case CS_CMYK: {
         return input;
       }
-      default: { return get_CMYK(get_RGB(input)); }
+      default: {
+        return get_CMYK(get_RGB(input));
+      }
     }
   }
 
@@ -266,7 +268,9 @@ namespace tingo {
       case CS_HSV: {
         return input;
       }
-      default: { return get_HSV(get_RGB(input)); }
+      default: {
+        return get_HSV(get_RGB(input));
+      }
     }
   }
 
@@ -300,7 +304,9 @@ namespace tingo {
       case CS_HSL: {
         return input;
       }
-      default: { return get_HSL(get_RGB(input)); }
+      default: {
+        return get_HSL(get_RGB(input));
+      }
     }
   }
 
@@ -323,7 +329,9 @@ namespace tingo {
       case CS_LAB: {
         return input;
       }
-      default: { return get_LAB(get_RGB(input)); }
+      default: {
+        return get_LAB(get_RGB(input));
+      }
     }
   }
 
@@ -491,31 +499,31 @@ namespace tingo {
   }
 
   Color gradient_2D(Color tl, Color tr, Color bl, Color br,
-                   Color (*gradient)(Color, Color, double), double x,
-                   double y) {
+                    Color (*gradient)(Color, Color, double), double x,
+                    double y) {
     // return gradient(gradient(tl, tr, x), gradient(bl, br, x), y);
     return gradient(gradient(tl, bl, y), gradient(tr, br, y), x);
   }
   Color gradient_2DB(Color tl, Color tr, Color bl, Color br, Color c,
-                    Color (*gradient)(Color, Color, double), double x,
-                    double y) {
+                     Color (*gradient)(Color, Color, double), double x,
+                     double y) {
     if (y < 0.5) {
       if (x < 0.5) {
         return gradient_2D(tl, gradient(tl, tr, 0.5), gradient(tl, bl, 0.5), c,
-                          gradient, x * 2.0, y * 2.0);
+                           gradient, x * 2.0, y * 2.0);
       } else if (x > 0.5) {
         return gradient_2D(gradient(tl, tr, 0.5), tr, c, gradient(tr, br, 0.5),
-                          gradient, (x - 0.5) * 2.0, y * 2.0);
+                           gradient, (x - 0.5) * 2.0, y * 2.0);
       } else {
         return gradient(gradient(tl, tr, 0.5), c, y * 2.0);
       }
     } else if (y > 0.5) {
       if (x < 0.5) {
         return gradient_2D(gradient(tl, bl, 0.5), c, bl, gradient(bl, br, 0.5),
-                          gradient, x * 2.0, (y - 0.5) * 2.0);
+                           gradient, x * 2.0, (y - 0.5) * 2.0);
       } else if (x > 0.5) {
         return gradient_2D(c, gradient(tr, br, 0.5), gradient(bl, br, 0.5), br,
-                          gradient, (x - 0.5) * 2.0, (y - 0.5) * 2.0);
+                           gradient, (x - 0.5) * 2.0, (y - 0.5) * 2.0);
       } else {
         return gradient(c, gradient(bl, br, 0.5), (y - 0.5) * 2.0);
       }
@@ -530,9 +538,9 @@ namespace tingo {
     }
   }
   Color gradient_2DC(Color tl, Color tc, Color tr, Color cl, Color cc, Color cr,
-                    Color bl, Color bc, Color br,
-                    Color (*gradient)(Color, Color, double), double x,
-                    double y) {
+                     Color bl, Color bc, Color br,
+                     Color (*gradient)(Color, Color, double), double x,
+                     double y) {
     if (y < 0.5) {
       if (x < 0.5) {
         return gradient_2D(tl, tc, cl, cc, gradient, x * 2.0, y * 2.0);
@@ -546,7 +554,7 @@ namespace tingo {
         return gradient_2D(cl, cc, bl, bc, gradient, x * 2.0, (y - 0.5) * 2.0);
       } else if (x > 0.5) {
         return gradient_2D(cc, cr, bc, br, gradient, (x - 0.5) * 2.0,
-                          (y - 0.5) * 2.0);
+                           (y - 0.5) * 2.0);
       } else {
         return gradient(cc, bc, (y - 0.5) * 2.0);
       }

@@ -1,8 +1,33 @@
 [
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/color.cpp.o -c /home/arden/programming/cpp/trigon/src/color.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/color.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/img/image.cpp.o -c /home/arden/programming/cpp/trigon/src/img/image.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/img/image.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/img/png.cpp.o -c /home/arden/programming/cpp/trigon/src/img/png.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/img/png.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
   "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/main.cpp.o -c /home/arden/programming/cpp/trigon/src/main.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/main.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/argparse.cpp.o -c /home/arden/programming/cpp/trigon/src/util/argparse.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/util/argparse.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/format.cpp.o -c /home/arden/programming/cpp/trigon/src/util/format.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/util/format.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
