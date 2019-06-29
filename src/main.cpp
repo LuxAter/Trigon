@@ -1,42 +1,94 @@
-#include "color.hpp"
-#include "img/img.hpp"
-#include "util/util.hpp"
-
-#include "triangle.hpp"
-
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
+#include "color.hpp"
+#include "cxxopts.hpp"
+#include "terminal.hpp"
+
+#include "image/image.hpp"
+
 int main(int argc, char* argv[]) {
   srand(time(NULL));
-  argparse::add_argument('m', "exe", "triangle", "trigon submodule");
-  argparse::add_argument('r', "resolution", 1920,
-                         "resolution of the output image");
-  argparse::add_argument('o', "output", "out",
-                         "output path for the image or series");
-  argparse::add_argument('e', "extension", "svg", "file extension type");
-  argparse::add_argument('g', "gradient", "", "color gradient to use");
-  auto args = argparse::parse(argc, argv);
-  std::cout << args["gradient"].get_string() << "??\n";
-  if (args["exe"].get_string() == "triangle") {
-    triangle(args);
+  try {
+    std::vector<std::string> modes = {"delaunay", "primative"};
+    cxxopts::Options options(argv[0], "Triangle based image generator");
+    options.positional_help("[POSITIONAL]");
+
+    options.add_options()("h,help", "Print this help message");
+    options.add_options()("mode", "Rendering method [delaunay,primative]",
+                          cxxopts::value<std::string>(), "MODE");
+
+    options.add_options("Input")("input", "Source image",
+                                 cxxopts::value<std::string>(), "IMAGE");
+
+    options.add_options("Delaunay")(
+        "mask", "Mask file to generate the contraints [.pslg,.svg]",
+        cxxopts::value<std::string>(), "MASK")(
+        "a,area", "Impose maximum triangle area", cxxopts::value<double>())(
+        "q,quality", "Impose minimum interior angle",
+        cxxopts::value<double>()->implicit_value("20"));
+
+    options.add_options("Output")(
+        "o,output", "Output path",
+        cxxopts::value<std::string>()->default_value("out"))(
+        "e,extension", "Output image type",
+        cxxopts::value<std::string>()->default_value("svg"))(
+        "r,resolution", "Output image resolution",
+        cxxopts::value<unsigned>()->default_value("1920"))(
+        "aspect", "Aspect ratio of output image",
+        cxxopts::value<std::string>()->default_value("16:9"))(
+        "c,count", "Number of images to generate",
+        cxxopts::value<unsigned>()->default_value("1"));
+
+    options.add_options("Terminal")(
+        "color", "When to use color in the terminal",
+        cxxopts::value<std::string>()->default_value("always"));
+
+    options.parse_positional({"mode", "input"});
+    auto result = options.parse(argc, argv);
+    if (result.count("help")) {
+      std::cout << options.help() << std::endl;
+      exit(0);
+    }
+    if (result.count("mode")) {
+      if (std::find(modes.begin(), modes.end(),
+                    result["mode"].as<std::string>()) != modes.end()) {
+      } else {
+        throw cxxopts::OptionParseException(
+            "‘mode’ must be from [delaunay,primative]");
+      }
+    } else {
+      throw cxxopts::OptionParseException("‘mode’ is required");
+    }
+
+    if (result.count("quality")) {
+      if (result["quality"].as<double>() > 60) {
+        throw cxxopts::OptionParseException(
+            "‘quality’ > 60, triangulation will never complete");
+      }
+      if (result["quality"].as<double>() > 28.6) {
+        if (!verify_warning(
+                "‘quality’ > 28.8, triangulation may not complete")) {
+          return 1;
+        }
+      }
+    }
+  } catch (const cxxopts::OptionException& e) {
+    error(e.what());
+    return 1;
   }
-  // double max_dist = std::sqrt(std::pow(img.width_ / 2.0, 2.0) +
-  //                             std::pow(img.height_ / 2.0, 2.0));
-  // std::vector<uint32_t> colors = {0xff0000, 0x00ff00, 0x0000ff};
-  // for (uint32_t y = 0; y < img.height_; ++y) {
-  //   for (uint32_t x = 0; x < img.width_; ++x) {
-  //     double dist = std::sqrt(std::pow(x - img.width_ / 2.0, 2.0) +
-  //                             std::pow(y - img.height_ / 2.0, 2.0)) /
-  //                   max_dist;
-  //     // img(x, y) = grad(dist, colors);
-  //   }
-  // }
-  // if (!image::write_png(
-  //         fmt::format("{0}.{1}", {args["output"].get_string(),
-  //                                 args["extension"].get_string()}),
-  //         img)) {
-  //   std::cout << "FAILED\n";
-  // }
+
+  // Image img("test.png");
+  Image img(500, 500, RASTERIZED);
+  img.rect(0, 0, 50, 500, 0x000090);
+  img.rect(50, 0, 50, 500, 0x0000f0);
+  img.rect(100, 0, 50, 500, 0x009000);
+  img.rect(150, 0, 50, 500, 0x00f000);
+  img.rect(200, 0, 50, 500, 0x900000);
+  img.rect(250, 0, 50, 500, 0xf00000);
+  img.rect(300, 0, 50, 500, 0xffffff);
+  img.save("out.png");
+
   return 0;
 }

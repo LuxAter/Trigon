@@ -4,10 +4,12 @@
 #include <string>
 #include <vector>
 
+#include "../config.hpp"
+
 namespace fmt {
 std::string format(const std::string& fmt, std::vector<std::string> args);
 std::string get_float(double v, int perc = 5);
-std::string get_hex(uint32_t c);
+std::string get_hex(COLOR c);
 }  // namespace fmt
 
 #endif  // TRIGON_UTIL_FORMAT_HPP_
