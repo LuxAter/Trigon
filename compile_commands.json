@@ -16,6 +16,11 @@
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/img/svg.cpp.o -c /home/arden/programming/cpp/trigon/src/img/svg.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/img/svg.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
   "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/main.cpp.o -c /home/arden/programming/cpp/trigon/src/main.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/main.cpp"
 },

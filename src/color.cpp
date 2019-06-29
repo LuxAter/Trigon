@@ -114,13 +114,13 @@ std::vector<uint8_t> get_cmyki(const uint32_t& col) {
 uint32_t hsv(const double& h, const double& s, const double& v) {
   double ih = std::fmod(h, 360.0);
   if (ih < 0) ih += 360.0;
-  double c = v - s;
+  double c = v * s;
   double x = c * (1.0 - std::fabs(std::fmod(ih / 60.0, 2.0) - 1.0));
   double m = v - c;
   double r = 0.0, g = 0.0, b = 0.0;
   if (ih < 60.0) {
     r = c + m;
-    g = x = m;
+    g = x + m;
     b = m;
   } else if (ih < 120.0) {
     r = x + m;
@@ -309,13 +309,12 @@ uint32_t grad_hsv(const double& t, const uint32_t& a, const uint32_t& b) {
   double dh = angle_diff_min(start[0], end[0]);
   double ds = end[1] - start[1];
   double dv = end[2] - start[2];
-  printf("%f, %f, %f [%f]\n", dh, ds, dv, t);
   return hsv((dh * t) + start[0], (ds * t) + start[1], (dv * t) + start[2]);
 }
 uint32_t grad_hsv(const double& t, std::vector<uint32_t> colors) {
   double it = t * (colors.size() - 1);
   std::size_t index = std::floor(it);
-  if (index == colors.size() - 1) {
+  if (index >= colors.size() - 1) {
     return colors.back();
   } else {
     return grad_hsv(it - index, colors[index], colors[index + 1]);

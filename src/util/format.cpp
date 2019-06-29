@@ -15,3 +15,15 @@ std::string fmt::format(const std::string& fmt, std::vector<std::string> args) {
   }
   return res;
 }
+
+std::string fmt::get_float(double v, int perc) {
+  char buff[255];
+  snprintf(buff, 255, "%.*f", perc, v);
+  return std::string(buff);
+}
+
+std::string fmt::get_hex(uint32_t c) {
+  char buff[255];
+  snprintf(buff, 255, "#%x", c);
+  return std::string(buff);
+}

@@ -41,21 +41,14 @@ bool image::write_png(const std::string& file_path, const Image& img) {
     }
     std::memset(byte_data[i], 0x00, 3 * img.width_ * sizeof(uint8_t));
     for (uint32_t j = 0; j < img.width_; ++j) {
-      // uint32_t id = 6 * j;
       uint32_t id = 3 * j;
-      uint16_t red = (img(j, i) >> 16) & 0xFF;
-      uint16_t blue = (img(j, i) >> 8) & 0xFF;
-      uint16_t green = (img(j, i) >> 0) & 0xFF;
-      // byte_data[i][id] = (red >> 8) & 0xff;
-      // byte_data[i][id + 1] = (red & 0xff);
-      // byte_data[i][id + 2] = (green >> 8) & 0xff;
-      // byte_data[i][id + 3] = (green & 0xff);
-      // byte_data[i][id + 4] = (blue >> 8) & 0xff;
-      // byte_data[i][id + 5] = (blue & 0xff);
+      // uint16_t red = (img(j, i) >> 16) & 0xFF;
+      // uint16_t green = (img(j, i) >> 8) & 0xFF;
+      // uint16_t blue = (img(j, i) >> 0) & 0xFF;
 
-      byte_data[i][id + 0] = (red & 0xff);
-      byte_data[i][id + 1] = (green & 0xff);
-      byte_data[i][id + 2] = (blue & 0xff);
+      // byte_data[i][id + 0] = (red & 0xff);
+      // byte_data[i][id + 1] = (green & 0xff);
+      // byte_data[i][id + 2] = (blue & 0xff);
     }
   }
   png_init_io(png, out);
