@@ -1,47 +1,47 @@
 [
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/color.cpp.o -c /home/arden/programming/cpp/trigon/src/color.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/color.cpp.o -c /home/arden/programming/cpp/trigon/src/color.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/color.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/img/image.cpp.o -c /home/arden/programming/cpp/trigon/src/img/image.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/img/image.cpp.o -c /home/arden/programming/cpp/trigon/src/img/image.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/img/image.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/img/png.cpp.o -c /home/arden/programming/cpp/trigon/src/img/png.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/img/png.cpp.o -c /home/arden/programming/cpp/trigon/src/img/png.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/img/png.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/img/svg.cpp.o -c /home/arden/programming/cpp/trigon/src/img/svg.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/img/svg.cpp.o -c /home/arden/programming/cpp/trigon/src/img/svg.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/img/svg.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/main.cpp.o -c /home/arden/programming/cpp/trigon/src/main.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/main.cpp.o -c /home/arden/programming/cpp/trigon/src/main.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/main.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/argparse.cpp.o -c /home/arden/programming/cpp/trigon/src/util/argparse.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/util/argparse.cpp.o -c /home/arden/programming/cpp/trigon/src/util/argparse.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/util/argparse.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/format.cpp.o -c /home/arden/programming/cpp/trigon/src/util/format.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/util/format.cpp.o -c /home/arden/programming/cpp/trigon/src/util/format.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/util/format.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/log.cpp.o -c /home/arden/programming/cpp/trigon/src/util/log.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/util/log.cpp.o -c /home/arden/programming/cpp/trigon/src/util/log.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/util/log.cpp"
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
-  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -std=gnu++17 -o CMakeFiles/trigon.dir/src/util/time.cpp.o -c /home/arden/programming/cpp/trigon/src/util/time.cpp",
+  "command": "clang++  -DTRIGON_JPEG -DTRIGON_PNG    -o CMakeFiles/trigon.dir/src/util/time.cpp.o -c /home/arden/programming/cpp/trigon/src/util/time.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/util/time.cpp"
 }
 ]

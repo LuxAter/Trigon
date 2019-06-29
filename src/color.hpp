@@ -49,4 +49,6 @@ uint32_t grad_hsv(const double& t, std::vector<uint32_t> colors);
 uint32_t grad_hsl(const double& t, const uint32_t& a, const uint32_t& b);
 uint32_t grad_hsl(const double& t, std::vector<uint32_t> colors);
 
+std::vector<uint32_t> gen_gradient(const std::string& colors);
+
 #endif  // TRIGON_COLOR_HPP_

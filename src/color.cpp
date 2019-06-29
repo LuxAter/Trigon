@@ -337,3 +337,20 @@ uint32_t grad_hsl(const double& t, std::vector<uint32_t> colors) {
     return grad_hsl(it - index, colors[index], colors[index + 1]);
   }
 }
+
+std::vector<uint32_t> gen_gradient(const std::string& colors) {
+  if (colors.size() == 0) {
+    return std::vector<uint32_t>{0x000000, 0xffffff};
+  }
+  std::vector<uint32_t> grad;
+  std::string s = colors;
+  std::size_t pos = 0;
+  std::string token;
+  while ((pos = s.find(':')) != std::string::npos) {
+    token = s.substr(0, pos);
+    grad.push_back(rgb(token));
+    s.erase(0, pos + 1);
+  }
+  grad.push_back(rgb(s));
+  return grad;
+}
