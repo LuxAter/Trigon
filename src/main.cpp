@@ -7,6 +7,7 @@
 #include "terminal.hpp"
 
 #include "image/image.hpp"
+#include "util/util.hpp"
 
 int main(int argc, char* argv[]) {
   srand(time(NULL));
@@ -79,15 +80,14 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  // Image img("test.png");
-  Image img(500, 500, RASTERIZED);
-  img.rect(0, 0, 50, 500, 0x000090);
-  img.rect(50, 0, 50, 500, 0x0000f0);
-  img.rect(100, 0, 50, 500, 0x009000);
-  img.rect(150, 0, 50, 500, 0x00f000);
-  img.rect(200, 0, 50, 500, 0x900000);
-  img.rect(250, 0, 50, 500, 0xf00000);
-  img.rect(300, 0, 50, 500, 0xffffff);
+  Image img(500, 500, SVG);
+  img.fill(0x00ff00);
+  img.rect(55, 23, 57, 90, 0xf0ff0f);
+  img.circle(100, 84, 35, 0x0f00f0);
+  img.ellipse(100, 200, 80, 20, 0xff0000);
+  img.line(10, 10, 200, 15, 0x000000);
+  img.triangle(100, 100, 150, 100, 200, 200, 0xFFFFFF);
+  img.save("out.svg");
   img.save("out.png");
 
   return 0;

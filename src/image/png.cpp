@@ -19,6 +19,13 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
   if (!load) {
     error("Failed to open file \"" + file + "\"");
   }
+  uint8_t header[8];
+  fread(header, 1, 8, load);
+  if (png_sig_cmp(header, 0, 8)) {
+    fclose(load);
+    error("Failed to open file \"" + file + "\"");
+    return res;
+  }
   png_structp png =
       png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (!png) {
@@ -34,6 +41,7 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
     return res;
   }
   png_init_io(png, load);
+  png_set_sig_bytes(png, 8);
   png_read_info(png, info);
   unsigned w = png_get_image_width(png, info);
   unsigned h = png_get_image_height(png, info);
@@ -53,11 +61,6 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
     png_set_tRNS_to_alpha(png);
   }
 
-  if (color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_GRAY ||
-      color_type == PNG_COLOR_TYPE_PALETTE) {
-    png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
-  }
-
   if (color_type == PNG_COLOR_TYPE_GRAY ||
       color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {
     png_set_gray_to_rgb(png);
@@ -70,8 +73,6 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
     byte_data[y] = (uint8_t*)std::malloc(png_get_rowbytes(png, info));
   }
   png_read_image(png, byte_data);
-  fclose(load);
-  png_destroy_read_struct(&png, &info, NULL);
 
   res.first = {w, h};
   res.second = std::vector<COLOR>(w * h, 0x0);
@@ -84,7 +85,7 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
 
   for (unsigned i = 0; i < h; ++i) {
     for (unsigned j = 0; j < w; ++j) {
-      uint32_t id = j * (bit_depth == 16 ? 6 : 3);
+      uint32_t id = j * 3;
 #if COLOR_DEPTH == 16
       if (bit_depth == 16) {
         res.second[i * w + j] =
@@ -116,9 +117,10 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
                  257.0)
              << 0);
       } else {
-        res.second[i * w + j] = (byte_data[i][id + 0] << 16) |
-                                (byte_data[i][id + 1] << 8) |
-                                (byte_data[i][id + 2] << 0);
+        res.second[i * w + j] =
+            (static_cast<uint32_t>(byte_data[i][id + 0]) << 16) |
+            (static_cast<uint32_t>(byte_data[i][id + 1]) << 8) |
+            (static_cast<uint32_t>(byte_data[i][id + 2]) << 0);
       }
 #endif
     }
@@ -128,6 +130,8 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
     free(byte_data[i]);
   }
   free(byte_data);
+  fclose(load);
+  png_destroy_read_struct(&png, &info, NULL);
   return res;
 }
 bool write_png(const std::string& file, const unsigned& w, const unsigned& h,

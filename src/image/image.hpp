@@ -19,8 +19,22 @@ class Image {
 
   void fill(const COLOR& c);
 
+  void circle(const double& cx, const double& cy, const double& r,
+              const COLOR& c);
+  void ellipse(const double& cx, const double& cy, const double& rx,
+               const double& ry, const COLOR& c);
+  void line(const double& x1, const double& y1, const double& x2,
+            const double& y2, const COLOR& c);
+  void polygon(const std::vector<std::array<double, 2>>& points,
+               const COLOR& c);
+  void polygon(const std::vector<double>& x, const std::vector<double>& y,
+               const COLOR& c);
   void rect(const double& x, const double& y, const double& w, const double& h,
             const COLOR& c);
+
+  void triangle(const double& x1, const double& y1, const double& x2,
+                const double& y2, const double& x3, const double& y3,
+                const COLOR& c);
 
   ImageType type;
   unsigned width_, height_;
@@ -28,6 +42,14 @@ class Image {
   std::vector<COLOR> pixels_;
   std::vector<std::pair<std::string, std::map<std::string, std::string>>>
       elements_;
+
+ private:
+  void line_rast(int x0, int y0, int x1, int y1, const COLOR& c);
+  void line_high(int x0, int y0, int x1, int y1, const COLOR& c);
+  void line_low(int x0, int y0, int x1, int y1, const COLOR& c);
+
+  void polygon_rast(const std::vector<double>& x, const std::vector<double>& y,
+                    const COLOR& c);
 };
 
 #endif  // TRIGON_IMAGE_IMAGE_HPP_
