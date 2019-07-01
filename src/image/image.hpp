@@ -8,6 +8,9 @@
 #include "../config.hpp"
 
 enum ImageType { SVG, RASTERIZED };
+
+unsigned get_resolution(const unsigned& w, const std::string aspect);
+
 class Image {
  public:
   Image(const std::string& file_path);

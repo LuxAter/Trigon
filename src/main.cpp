@@ -9,6 +9,8 @@
 #include "image/image.hpp"
 #include "util/util.hpp"
 
+#include "delaunay/delaunay.hpp"
+
 int main(int argc, char* argv[]) {
   srand(time(NULL));
   try {
@@ -47,22 +49,16 @@ int main(int argc, char* argv[]) {
         cxxopts::value<std::string>()->default_value("always"));
 
     options.parse_positional({"mode", "input"});
+
     auto result = options.parse(argc, argv);
+
+    // HELP
     if (result.count("help")) {
       std::cout << options.help() << std::endl;
       exit(0);
     }
-    if (result.count("mode")) {
-      if (std::find(modes.begin(), modes.end(),
-                    result["mode"].as<std::string>()) != modes.end()) {
-      } else {
-        throw cxxopts::OptionParseException(
-            "‘mode’ must be from [delaunay,primative]");
-      }
-    } else {
-      throw cxxopts::OptionParseException("‘mode’ is required");
-    }
 
+    // VALIDATION
     if (result.count("quality")) {
       if (result["quality"].as<double>() > 60) {
         throw cxxopts::OptionParseException(
@@ -75,20 +71,21 @@ int main(int argc, char* argv[]) {
         }
       }
     }
+
+    if (result.count("mode")) {
+      if (result["mode"].as<std::string>() == "delaunay") {
+        delaunay::main(result);
+      } else {
+        throw cxxopts::OptionParseException(
+            "‘mode’ must be from [delaunay,primative]");
+      }
+    } else {
+      throw cxxopts::OptionParseException("‘mode’ is required");
+    }
+
   } catch (const cxxopts::OptionException& e) {
     error(e.what());
     return 1;
   }
-
-  Image img(500, 500, SVG);
-  img.fill(0x00ff00);
-  img.rect(55, 23, 57, 90, 0xf0ff0f);
-  img.circle(100, 84, 35, 0x0f00f0);
-  img.ellipse(100, 200, 80, 20, 0xff0000);
-  img.line(10, 10, 200, 15, 0x000000);
-  img.triangle(100, 100, 150, 100, 200, 200, 0xFFFFFF);
-  img.save("out.svg");
-  img.save("out.png");
-
   return 0;
 }

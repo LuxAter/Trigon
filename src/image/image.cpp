@@ -13,6 +13,13 @@
 #include "png.hpp"
 #include "svg.hpp"
 
+unsigned get_resolution(const unsigned& w, const std::string aspect) {
+  unsigned ax = stol(aspect.substr(0, aspect.find(':')));
+  unsigned ay = stol(aspect.substr(aspect.find(':') + 1));
+  double ar = ay / static_cast<double>(ax);
+  return static_cast<unsigned>(w * ar);
+}
+
 Image::Image(const std::string& file_path) {
   if (endswith(file_path, ".svg")) {
   } else if (endswith(file_path, ".png")) {
