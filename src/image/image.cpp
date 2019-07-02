@@ -55,6 +55,7 @@ bool Image::save(const std::string& file_path) {
     error("Unrecognize output image type \"" + file_path + "\"");
     return false;
   }
+  return false;
 }
 
 void Image::rasterize() {
@@ -62,28 +63,34 @@ void Image::rasterize() {
   for (auto& it : elements_) {
     if (it.first == "circle") {
       int radius = stol(it.second["r"]);
-      unsigned cx = stol(it.second["cx"]);
-      unsigned cy = stol(it.second["cy"]);
+      long cx = stol(it.second["cx"]);
+      long cy = stol(it.second["cy"]);
       uint32_t c = rgb(it.second["fill"]);
       int rsq = radius * radius;
       for (int y = -radius; y <= radius; ++y) {
         for (int x = -radius; x <= radius; ++x) {
           if (x * x + y * y < rsq) {
-            pixels_[(cy + y) * width_ + (cx + x)] = c;
+            if ((cx + y) >= 0 && (cx + y) < height_ && (cx + x) >= 0 &&
+                (cx + x) < width_) {
+              pixels_[(cy + y) * width_ + (cx + x)] = c;
+            }
           }
         }
       }
     } else if (it.first == "ellipse") {
       int rx = stol(it.second["rx"]);
       int ry = stol(it.second["ry"]);
-      unsigned cx = stol(it.second["cx"]);
-      unsigned cy = stol(it.second["cy"]);
+      long cx = stol(it.second["cx"]);
+      long cy = stol(it.second["cy"]);
       uint32_t c = rgb(it.second["fill"]);
       double rxsq = rx * rx, rysq = ry * ry;
       for (int y = -ry; y <= ry; ++y) {
         for (int x = -rx; x <= rx; ++x) {
           if (((x * x) / rxsq) + ((y * y) / rysq) <= 1.0) {
-            pixels_[(cy + y) * width_ + (cx + x)] = c;
+            if ((cx + y) >= 0 && (cx + y) < height_ && (cx + x) >= 0 &&
+                (cx + x) < width_) {
+              pixels_[(cy + y) * width_ + (cx + x)] = c;
+            }
           }
         }
       }
@@ -118,7 +125,9 @@ void Image::rasterize() {
       uint32_t c = rgb(it.second["fill"]);
       for (unsigned py = y; py < y + h; py++) {
         for (unsigned px = x; px < x + w; px++) {
-          pixels_[py * width_ + px] = c;
+          if (px >= 0 && px < width_ && py >= 0 && py < height_) {
+            pixels_[py * width_ + px] = c;
+          }
         }
       }
     }
@@ -263,7 +272,9 @@ void Image::line_low(int x0, int y0, int x1, int y1, const COLOR& c) {
   int d = 2 * dy - dx;
   int y = y0;
   for (int x = x0; x <= x1; ++x) {
-    pixels_[y * width_ + x] = c;
+    if (x >= 0 && x < width_ && y >= 0 && y < height_) {
+      pixels_[y * width_ + x] = c;
+    }
     if (d > 0) {
       y += yi;
       d -= (2 * dx);
@@ -282,7 +293,9 @@ void Image::line_high(int x0, int y0, int x1, int y1, const COLOR& c) {
   int d = 2 * dx - dy;
   int x = x0;
   for (int y = y0; y <= y1; ++y) {
-    pixels_[y * width_ + x] = c;
+    if (x >= 0 && x < width_ && y >= 0 && y < height_) {
+      pixels_[y * width_ + x] = c;
+    }
     if (d > 0) {
       x += xi;
       d -= (2 * dy);
@@ -317,11 +330,15 @@ void Image::polygon_rast(const std::vector<double>& x,
       std::size_t b = (a + 1) % inter.size();
       if (inter[a] > inter[b]) {
         for (int xv = inter[b]; xv <= inter[a]; ++xv) {
-          pixels_[i * width_ + xv] = c;
+          if (i >= 0 && i < height_ && xv >= 0 && xv < width_) {
+            pixels_[i * width_ + xv] = c;
+          }
         }
       } else {
         for (int xv = inter[a]; xv <= inter[b]; ++xv) {
-          pixels_[i * width_ + xv] = c;
+          if (i >= 0 && i < height_ && xv >= 0 && xv < width_) {
+            pixels_[i * width_ + xv] = c;
+          }
         }
       }
     }

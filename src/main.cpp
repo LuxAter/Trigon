@@ -26,11 +26,15 @@ int main(int argc, char* argv[]) {
                                  cxxopts::value<std::string>(), "IMAGE");
 
     options.add_options("Delaunay")(
-        "mask", "Mask file to generate the contraints [.pslg,.svg]",
-        cxxopts::value<std::string>(), "MASK")(
+        "pslg", "PSLG file to generate the contraints [.pslg,.svg]",
+        cxxopts::value<std::string>(), "PSLG")(
         "a,area", "Impose maximum triangle area", cxxopts::value<double>())(
-        "q,quality", "Impose minimum interior angle",
-        cxxopts::value<double>()->implicit_value("20"));
+        "q,quality", "Impose minimum interior angle", cxxopts::value<double>())(
+        "m,mesh", "Should generate a structured mesh")(
+        "stddev", "Standard Deviation of the mesh variance",
+        cxxopts::value<double>()->default_value("10.0"))(
+        "spacing", "Spacing between points of the mesh",
+        cxxopts::value<double>()->default_value("70"));
 
     options.add_options("Output")(
         "o,output", "Output path",
@@ -75,6 +79,10 @@ int main(int argc, char* argv[]) {
     if (result.count("mode")) {
       if (result["mode"].as<std::string>() == "delaunay") {
         delaunay::main(result);
+        std::cout << "BACK!\n";
+        return 0;
+      } else if (result["mode"].as<std::string>() == "primative") {
+        return 0;
       } else {
         throw cxxopts::OptionParseException(
             "‘mode’ must be from [delaunay,primative]");

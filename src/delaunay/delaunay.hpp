@@ -4,6 +4,15 @@
 #include "../cxxopts.hpp"
 
 namespace delaunay {
+std::pair<std::vector<std::array<double, 2>>,
+          std::vector<std::array<std::size_t, 3>>>
+execute_triangle(cxxopts::ParseResult args,
+                 const std::vector<std::array<double, 2>>& points,
+                 const std::vector<std::array<std::size_t, 2>>& edges,
+                 const std::vector<std::array<double, 2>>& holes);
+std::pair<std::vector<std::array<double, 2>>,
+          std::vector<std::array<std::size_t, 3>>>
+generate_mesh(cxxopts::ParseResult args, const unsigned& w, const unsigned& h);
 void main(cxxopts::ParseResult args);
 }  // namespace delaunay
 
