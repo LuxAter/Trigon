@@ -191,7 +191,7 @@ void Image::line(const double& x1, const double& y1, const double& x2,
 }
 
 void Image::polygon(const std::vector<std::array<double, 2>>& points,
-                    const COLOR& c) {
+                    const COLOR& c, bool outline) {
   if (type == RASTERIZED) {
   } else {
     std::string points_str = "";
@@ -199,10 +199,17 @@ void Image::polygon(const std::vector<std::array<double, 2>>& points,
       points_str += fmt::get_float(it[0]) + ',' + fmt::get_float(it[1]) + ' ';
     }
     points_str.pop_back();
-    elements_.push_back({"polygon",
-                         {{"points", points_str},
-                          {"fill", fmt::get_hex(c)},
-                          {"stroke-width", "0"}}});
+    if (outline) {
+      elements_.push_back({"polygon",
+                           {{"points", points_str},
+                            {"stroke", fmt::get_hex(c)},
+                            {"fill", "none"}}});
+    } else {
+      elements_.push_back({"polygon",
+                           {{"points", points_str},
+                            {"fill", fmt::get_hex(c)},
+                            {"stroke-width", "0"}}});
+    }
   }
 }
 void Image::polygon(const std::vector<double>& x, const std::vector<double>& y,
@@ -242,8 +249,8 @@ void Image::rect(const double& x, const double& y, const double& w,
 
 void Image::triangle(const double& x1, const double& y1, const double& x2,
                      const double& y2, const double& x3, const double& y3,
-                     const COLOR& c) {
-  polygon({{x1, y1}, {x2, y2}, {x3, y3}}, c);
+                     const COLOR& c, bool outline) {
+  polygon({{x1, y1}, {x2, y2}, {x3, y3}}, c, outline);
 }
 
 void Image::line_rast(int x0, int y0, int x1, int y1, const COLOR& c) {

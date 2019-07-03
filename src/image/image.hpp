@@ -28,8 +28,8 @@ class Image {
                const double& ry, const COLOR& c);
   void line(const double& x1, const double& y1, const double& x2,
             const double& y2, const COLOR& c);
-  void polygon(const std::vector<std::array<double, 2>>& points,
-               const COLOR& c);
+  void polygon(const std::vector<std::array<double, 2>>& points, const COLOR& c,
+               bool outline = false);
   void polygon(const std::vector<double>& x, const std::vector<double>& y,
                const COLOR& c);
   void rect(const double& x, const double& y, const double& w, const double& h,
@@ -37,7 +37,7 @@ class Image {
 
   void triangle(const double& x1, const double& y1, const double& x2,
                 const double& y2, const double& x3, const double& y3,
-                const COLOR& c);
+                const COLOR& c, bool outline = false);
 
   ImageType type;
   unsigned width_, height_;
