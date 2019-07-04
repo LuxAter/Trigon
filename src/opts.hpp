@@ -80,12 +80,14 @@ struct Value {
     return static_cast<_T>(stold(value));
   }
   template <typename _T>
-  typename std::enable_if<std::is_integral<_T>::value, _T>::type as() const {
-    return static_cast<_T>(stoll(value));
-  }
-  template <typename _T>
   typename std::enable_if<std::is_unsigned<_T>::value, _T>::type as() const {
     return static_cast<_T>(stoull(value));
+  }
+  template <typename _T>
+  typename std::enable_if<
+      std::is_integral<_T>::value && !std::is_unsigned<_T>::value, _T>::type
+  as() const {
+    return static_cast<_T>(stoll(value));
   }
   template <typename _T>
   typename std::enable_if<std::is_same<_T, std::string>::value, _T>::type as()
@@ -115,6 +117,8 @@ class ArgumentParser {
   std::map<std::string, Value> options_;
   std::vector<std::string> positional_;
 };
+
+typedef std::map<std::string, Value> ParseResult;
 }  // namespace opts
 
 #endif  // OPTS_HPP_

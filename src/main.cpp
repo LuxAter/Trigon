@@ -22,6 +22,10 @@ int main(int argc, char* argv[]) {
   parser.add_option("h,help", "Print this help message");
 
   parser.add_option("input", "Sorce image", opts::Value::STRING);
+  parser.add_option("p,pallet", "Color pallet to generate image using",
+                    opts::Value::STRING);
+  parser.add_option("c,center", "Center for the radial gradiant",
+                    opts::Value(opts::Value::STRING).implicit("0.5,0.5"));
 
   parser.add_option("pslg", "PSLG file to generate the contraints [.pslg,.svg]",
                     opts::Value::STRING);
@@ -48,90 +52,36 @@ int main(int argc, char* argv[]) {
 
   auto args = parser.parse(argc, argv);
 
+  if (args["help"].count) {
+    // std::cout << options.help() << std::endl;
+    return 0;
+  }
+
+  if (args["quality"].count) {
+    if (args["quality"].as<double>() > 60) {
+      error("'quality' > 60, triangulation will never complete");
+      return 1;
+    } else if (args["quality"].as<double>() > 28.6) {
+      if (!verify_warning("'quality' > 28.8, triangulation may not complete")) {
+        return 1;
+      }
+    }
+  }
+
+  if (args["mode"].count) {
+    if (args["mode"].as<std::string>() == "delaunay") {
+      delaunay::main(args);
+    } else if (args["mode"].as<std::string>() == "primative") {
+    } else {
+      error("'mode' must be from [delaunay,primative]");
+      return 1;
+    }
+  } else {
+    error("'mode' is required");
+    return 1;
+  }
   for (auto& it : args) {
     std::cout << it.first << ":" << it.second.value << "\n";
   }
-  // try {
-  //   std::vector<std::string> modes = {"delaunay", "primative"};
-  //   cxxopts::Options options(argv[0], "Triangle based image generator");
-  //   options.positional_help("[POSITIONAL]");
-  //
-  //   options.add_options()("h,help", "Print this help message");
-  //   options.add_options()("mode", "Rendering method [delaunay,primative]",
-  //                         cxxopts::value<std::string>(), "MODE");
-  //
-  //   options.add_options("Input")("input", "Source image",
-  //                                cxxopts::value<std::string>(), "IMAGE");
-  //
-  //   options.add_options("Delaunay")(
-  //       "pslg", "PSLG file to generate the contraints [.pslg,.svg]",
-  //       cxxopts::value<std::string>(), "PSLG")(
-  //       "a,area", "Impose maximum triangle area", cxxopts::value<double>())(
-  //       "q,quality", "Impose minimum interior angle",
-  //       cxxopts::value<double>())( "m,mesh", "Should generate a structured
-  //       mesh")( "stddev", "Standard Deviation of the mesh variance",
-  //       cxxopts::value<double>()->default_value("10.0"))(
-  //       "spacing", "Spacing between points of the mesh",
-  //       cxxopts::value<double>()->default_value("70"));
-  //
-  //   options.add_options("Output")(
-  //       "o,output", "Output path",
-  //       cxxopts::value<std::string>()->default_value("out"))(
-  //       "e,extension", "Output image type",
-  //       cxxopts::value<std::string>()->default_value("svg"))(
-  //       "r,resolution", "Output image resolution",
-  //       cxxopts::value<unsigned>()->default_value("1920"))(
-  //       "aspect", "Aspect ratio of output image",
-  //       cxxopts::value<std::string>()->default_value("16:9"))(
-  //       "c,count", "Number of images to generate",
-  //       cxxopts::value<unsigned>()->default_value("1"));
-  //
-  //   options.add_options("Terminal")(
-  //       "color", "When to use color in the terminal",
-  //       cxxopts::value<std::string>()->default_value("always"));
-  //
-  //   options.parse_positional({"mode", "input"});
-  //
-  //   auto result = options.parse(argc, argv);
-  //
-  //   // HELP
-  //   if (result.count("help")) {
-  //     std::cout << options.help() << std::endl;
-  //     exit(0);
-  //   }
-  //
-  //   // VALIDATION
-  //   if (result.count("quality")) {
-  //     // if (result["quality"].as<double>() > 60) {
-  //     //   throw cxxopts::OptionParseException(
-  //     //       "‘quality’ > 60, triangulation will never complete");
-  //     // }
-  //     if (result["quality"].as<double>() > 28.6) {
-  //       if (!verify_warning(
-  //               "‘quality’ > 28.8, triangulation may not complete")) {
-  //         return 1;
-  //       }
-  //     }
-  //   }
-  //
-  //   if (result.count("mode")) {
-  //     if (result["mode"].as<std::string>() == "delaunay") {
-  //       delaunay::main(&result);
-  //       std::cout << "BACK!\n";
-  //       return 0;
-  //     } else if (result["mode"].as<std::string>() == "primative") {
-  //       return 0;
-  //     } else {
-  //       throw cxxopts::OptionParseException(
-  //           "‘mode’ must be from [delaunay,primative]");
-  //     }
-  //   } else {
-  //     throw cxxopts::OptionParseException("‘mode’ is required");
-  //   }
-  //
-  // } catch (const cxxopts::OptionException& e) {
-  //   error(e.what());
-  //   return 1;
-  // }
   return 0;
 }

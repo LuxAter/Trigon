@@ -2,10 +2,15 @@
 #define TRIGON_COLOR_HPP_
 
 #include <cstdint>
+#include <map>
 #include <string>
 #include <vector>
 
 enum ColorSpace { RGB, CMYK, HSV, HSL };
+
+extern std::map<std::string, std::vector<uint32_t>> material_colors_;
+
+std::vector<uint32_t> get_pallet(const std::string& palstr);
 
 uint32_t rgb(const double& r, const double& g, const double& b);
 uint32_t rgb(const uint8_t& r, const uint8_t& g, const uint8_t& b);

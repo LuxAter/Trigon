@@ -2,10 +2,12 @@
 
 #include <random>
 
-#include "../cxxopts.hpp"
 #include "../image/image.hpp"
+#include "../opts.hpp"
 #include "../terminal.hpp"
 #include "../util/util.hpp"
+
+#include "../color.hpp"
 
 #define REAL double
 #define VOID void
@@ -14,19 +16,19 @@
 
 std::pair<std::vector<std::array<double, 2>>,
           std::vector<std::array<std::size_t, 3>>>
-delaunay::execute_triangle(const cxxopts::ParseResult* args,
+delaunay::execute_triangle(opts::ParseResult args,
                            const std::vector<std::array<double, 2>>& points,
                            const std::vector<std::array<std::size_t, 2>>& edges,
                            const std::vector<std::array<double, 2>>& holes) {
-  bool enforce_area = args->count("area");
-  bool enforce_quality = args->count("quality");
+  bool enforce_area = args["area"].count;
+  bool enforce_quality = args["quality"].count;
   double area = -1.0;
   double quality = -1.0;
   if (enforce_area) {
-    area = (*args)["area"].as<double>();
+    area = args["area"].as<double>();
   }
   if (enforce_quality) {
-    quality = (*args)["quality"].as<double>();
+    quality = args["quality"].as<double>();
   }
 
   struct triangulateio src, out;
@@ -46,7 +48,6 @@ delaunay::execute_triangle(const cxxopts::ParseResult* args,
   out.edgelist = NULL;
 
   if (src.numberofpoints != 0) {
-    info("1");
     src.pointlist = static_cast<double*>(
         std::malloc(src.numberofpoints * 2 * sizeof(double)));
     for (std::size_t i = 0; i < points.size(); ++i) {
@@ -55,7 +56,6 @@ delaunay::execute_triangle(const cxxopts::ParseResult* args,
     }
   }
   if (src.numberofsegments != 0) {
-    info("2");
     src.segmentlist =
         static_cast<int*>(std::malloc(src.numberofsegments * 2 * sizeof(int)));
     for (std::size_t i = 0; i < edges.size(); ++i) {
@@ -64,7 +64,6 @@ delaunay::execute_triangle(const cxxopts::ParseResult* args,
     }
   }
   if (src.numberofholes != 0) {
-    info("3");
     src.holelist = static_cast<double*>(
         std::malloc(src.numberofholes * 2 * sizeof(double)));
     for (std::size_t i = 0; i < holes.size(); ++i) {
@@ -73,7 +72,7 @@ delaunay::execute_triangle(const cxxopts::ParseResult* args,
     }
   }
 
-  std::string switches = "enzV";
+  std::string switches = "zQ";
   if (edges.size() != 0 || holes.size() != 0) {
     switches += "p";
   }
@@ -86,9 +85,7 @@ delaunay::execute_triangle(const cxxopts::ParseResult* args,
   char* buff = static_cast<char*>(std::malloc(switches.size() + 1));
   std::copy(switches.begin(), switches.end(), buff);
 
-  success(switches);
   triangulate(buff, &src, &out, NULL);
-  success(switches);
 
   std::vector<std::array<double, 2>> out_points;
   std::vector<std::array<std::size_t, 3>> out_triangles;
@@ -104,29 +101,19 @@ delaunay::execute_triangle(const cxxopts::ParseResult* args,
   }
 
   if (src.numberofpoints != 0) {
-    info("1");
     free(src.pointlist);
-    info("1");
   }
   if (src.numberofsegments != 0) {
-    info("2");
     free(src.segmentlist);
   }
   if (src.numberofholes != 0) {
-    info("3");
     free(src.holelist);
   }
-  info("4");
   free(out.pointlist);
-  info("5");
   free(out.pointmarkerlist);
-  info("6");
   free(out.trianglelist);
-  info("7");
   free(out.neighborlist);
-  info("8");
   free(out.segmentlist);
-  info("9");
   free(out.edgelist);
 
   return {out_points, out_triangles};
@@ -134,18 +121,18 @@ delaunay::execute_triangle(const cxxopts::ParseResult* args,
 
 std::pair<std::vector<std::array<double, 2>>,
           std::vector<std::array<std::size_t, 3>>>
-delaunay::generate_mesh(const cxxopts::ParseResult* args, const unsigned& w,
+delaunay::generate_mesh(opts::ParseResult args, const unsigned& w,
                         const unsigned& h) {
   std::vector<std::array<double, 2>> points, holes;
   std::vector<std::array<std::size_t, 2>> edges;
-  if (args->count("pslg")) {
+  if (args["pslg"].count) {
     info("NEED TO LOAD PSLG");
   } else {
     info("GENERATING PSLG");
-    if (args->count("mesh")) {
+    if (args["mesh"].count) {
       info("Generating mesh");
-      double stddev = (*args)["stddev"].as<double>();
-      double spacing = (*args)["spacing"].as<double>();
+      double stddev = args["stddev"].as<double>();
+      double spacing = args["spacing"].as<double>();
       std::random_device rd;
       std::mt19937 gen(rd());
       std::normal_distribution<double> dist(0.0, stddev);
@@ -172,23 +159,56 @@ delaunay::generate_mesh(const cxxopts::ParseResult* args, const unsigned& w,
   return res;
 }
 
-void delaunay::main(const cxxopts::ParseResult* args) {
-  Image img((*args)["resolution"].as<unsigned>(),
-            get_resolution((*args)["resolution"].as<unsigned>(),
-                           (*args)["aspect"].as<std::string>()));
-
+void delaunay::main(opts::ParseResult args) {
+  Image img(args["resolution"].as<unsigned>(),
+            get_resolution(args["resolution"].as<unsigned>(),
+                           args["aspect"].as<std::string>()));
   img.fill(0xffffff);
 
   auto returned = generate_mesh(args, img.width_, img.height_);
   auto points = returned.first;
   auto triangles = returned.second;
+  double max_dist = triangles.size();
 
-  for (auto& it : triangles) {
-    img.triangle(points[it[0]][0], points[it[0]][1], points[it[1]][0],
-                 points[it[1]][1], points[it[2]][0], points[it[2]][1], 0x000000,
-                 true);
+  bool src_image = args["input"].count;
+  bool grad_origin = args["center"].count;
+  double gcx = 0.0;
+  double gcy = 0.0;
+  if (grad_origin) {
+    std::string grad_orig_str = args["center"].as<std::string>();
+    gcx = stod(grad_orig_str.substr(0, grad_orig_str.find(',')));
+    gcy = stod(grad_orig_str.substr(grad_orig_str.find(',') + 1));
+    double fx = std::max(gcx, 1.0 - gcx), fy = std::max(gcy, 1.0 - gcy);
+    max_dist = std::sqrt(std::pow(img.width_ * fx, 2.0) +
+                         std::pow(img.height_ * fy, 2.0));
+    gcx *= img.width_;
+    gcy *= img.height_;
   }
 
-  img.save((*args)["output"].as<std::string>() + '.' +
-           (*args)["extension"].as<std::string>());
+  std::vector<uint32_t> colors = {0xffffff, 0x000000};
+  if (args["pallet"].count) {
+    colors = get_pallet(args["pallet"].as<std::string>());
+  }
+
+  for (std::size_t i = 0; i < triangles.size(); ++i) {
+    auto it = triangles[i];
+    double cx = (points[it[0]][0] + points[it[1]][0] + points[it[2]][0]) / 3.0;
+    double cy = (points[it[0]][1] + points[it[1]][1] + points[it[2]][1]) / 3.0;
+    if (src_image) {
+    } else {
+      double dist;
+      if (grad_origin) {
+        dist = std::sqrt(std::pow(cx - gcx, 2.0) + std::pow(cy - gcy, 2.0)) /
+               max_dist;
+      } else {
+        dist = i / max_dist;
+      }
+      img.triangle(points[it[0]][0], points[it[0]][1], points[it[1]][0],
+                   points[it[1]][1], points[it[2]][0], points[it[2]][1],
+                   grad(dist, colors), false);
+    }
+  }
+
+  img.save(args["output"].as<std::string>() + '.' +
+           args["extension"].as<std::string>());
 }

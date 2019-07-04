@@ -36,6 +36,11 @@
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build",
+  "command": "/sbin/c++  -DTRIGON_JPEG -DTRIGON_PNG -I/home/arden/programming/cpp/trigon/external/triangle    -std=gnu++17 -o CMakeFiles/trigon.dir/src/opts.cpp.o -c /home/arden/programming/cpp/trigon/src/opts.cpp",
+  "file": "/home/arden/programming/cpp/trigon/src/opts.cpp"
+},
+{
+  "directory": "/home/arden/programming/cpp/trigon/build",
   "command": "/sbin/c++  -DTRIGON_JPEG -DTRIGON_PNG -I/home/arden/programming/cpp/trigon/external/triangle    -std=gnu++17 -o CMakeFiles/trigon.dir/src/terminal.cpp.o -c /home/arden/programming/cpp/trigon/src/terminal.cpp",
   "file": "/home/arden/programming/cpp/trigon/src/terminal.cpp"
 },
@@ -51,7 +56,7 @@
 },
 {
   "directory": "/home/arden/programming/cpp/trigon/build/external/triangle",
-  "command": "/sbin/clang -DANSI_DECLARATORS -DTRILIBRARY  -fPIC   -o CMakeFiles/triangle.dir/triangle.c.o   -c /home/arden/programming/cpp/trigon/external/triangle/triangle.c",
+  "command": "/sbin/cc -DANSI_DECLARATORS -DTRILIBRARY  -fPIC   -o CMakeFiles/triangle.dir/triangle.c.o   -c /home/arden/programming/cpp/trigon/external/triangle/triangle.c",
   "file": "/home/arden/programming/cpp/trigon/external/triangle/triangle.c"
 }
 ]

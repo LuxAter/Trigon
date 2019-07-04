@@ -53,13 +53,18 @@ std::map<std::string, opts::Value> opts::ArgumentParser::parse(int argc,
         it->second.count++;
         if (it->second.type_ == Value::ValueType::BOOL) {
           it->second.value = (it->second.value == "0") ? "1" : "0";
-        } else if (value != std::string()) {
-          it->second.value = value;
-        } else if (i + 1 < argc) {
-          it->second.value = std::string(argv[i + 1]);
-          i += 1;
         } else {
-          error(fmt::format("expected an argument for '{0}'", {name}));
+          if (it->second.implicit_value != std::string()) {
+            it->second.value = it->second.implicit_value;
+          }
+          if (value != std::string()) {
+            it->second.value = value;
+          } else if (i + 1 < argc) {
+            it->second.value = std::string(argv[i + 1]);
+            i += 1;
+          } else if (it->second.value == std::string()) {
+            error(fmt::format("expected an argument for '{0}'", {name}));
+          }
         }
       } else {
         warning(fmt::format("unexpected option '{0}'", {name}));
@@ -77,7 +82,8 @@ std::map<std::string, opts::Value> opts::ArgumentParser::parse(int argc,
             if (options_[it->second].implicit_value != std::string()) {
               options_[it->second].value = options_[it->second].implicit_value;
             }
-            if (i + 1 < argc && j == strlen(argv[i]) - 1) {
+            if (i + 1 < argc && j == strlen(argv[i]) - 1 &&
+                argv[i + 1][0] != '-') {
               options_[it->second].value = std::string(argv[i + 1]);
               i += 1;
               break;
