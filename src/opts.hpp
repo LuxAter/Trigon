@@ -2,14 +2,15 @@
 #define OPTS_HPP_
 
 #include <map>
-#include <type_traits>
+#include <string>
 #include <vector>
 
-namespace opts {
+namespace cli {
 struct Value {
-  enum ValueType { BOOL, NUMBER, STRING, OTHER };
+  enum ValueType { BOOL, NUMBER, STRING };
   Value() : type_(BOOL), value(), implicit_value(), count(0) {}
-  Value(ValueType type) : type_(type), value(), implicit_value(), count(0) {}
+  Value(const ValueType& type)
+      : type_(type), value(), implicit_value(), count(0) {}
   Value(const char* def)
       : type_(STRING), value(def), implicit_value(), count(0) {}
   Value(const char* imp, const char* def)
@@ -39,9 +40,6 @@ struct Value {
         value(std::to_string(def)),
         implicit_value(std::to_string(imp)),
         count(0) {}
-  ValueType type_;
-  std::string value, implicit_value;
-  std::size_t count;
 
   Value implicit(const char* val) {
     this->implicit_value = val;
@@ -59,21 +57,20 @@ struct Value {
     this->implicit_value = std::to_string(val);
     return *this;
   }
-
-  bool validate() {
-    if (type_ == BOOL) {
-      if (value == "0" || value == "1") {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (type_ == NUMBER) {
-    } else if (type_ == STRING) {
-      return true;
-    }
-    return false;
+  Value implicit(const bool& val) {
+    this->implicit_value = std::to_string(val);
+    return *this;
   }
 
+  bool valdate() {
+    if (type_ == BOOL) {
+      if (value == "0" || value == "1")
+        return true;
+      else
+        return false;
+    }
+    return true;
+  }
   template <typename _T>
   typename std::enable_if<std::is_floating_point<_T>::value, _T>::type as()
       const {
@@ -102,6 +99,10 @@ struct Value {
   as() const {
     return _T(value);
   }
+
+  ValueType type_;
+  std::string value, implicit_value;
+  int count;
 };
 
 class ArgumentParser {
@@ -111,14 +112,19 @@ class ArgumentParser {
   void add_option(const std::string& name, std::string help,
                   Value::ValueType type, bool positional = false);
   std::map<std::string, Value> parse(int argc, char* argv[]);
+  void display_usage();
+  void display_help();
 
  private:
+  std::string exe_;
   std::map<char, std::string> name_map_;
   std::map<std::string, Value> options_;
+  std::map<std::string, std::string> help_;
   std::vector<std::string> positional_;
 };
 
 typedef std::map<std::string, Value> ParseResult;
-}  // namespace opts
+
+}  // namespace cli
 
 #endif  // OPTS_HPP_

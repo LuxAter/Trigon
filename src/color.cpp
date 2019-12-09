@@ -108,7 +108,7 @@ std::vector<uint32_t> get_pallet(const std::string& palstr) {
     if (current[0] == '#') {
       pallet.push_back(rgb(current));
     } else if (current[current.find_last_of('-') + 1] <= 57) {
-      std::string color = current.substr(0, current.find_last_of('-') - 1);
+      std::string color = current.substr(0, current.find_last_of('-'));
       std::size_t id = stoul(current.substr(current.find_last_of('-') + 1));
       std::map<std::string, std::vector<uint32_t>>::iterator it;
       if ((it = material_colors_.find(color)) != material_colors_.end()) {
@@ -122,11 +122,19 @@ std::vector<uint32_t> get_pallet(const std::string& palstr) {
         pallet.push_back(it->second[id]);
       }
     } else {
-      std::string color = current.substr(0, current.size() - 1);
+      bool inv = current[0] == 'n';
+      std::string color = current.substr(inv, current.size() - 1 - inv);
+      info(color);
       std::map<std::string, std::vector<uint32_t>>::iterator it;
       if ((it = material_colors_.find(color)) != material_colors_.end()) {
-        for (auto& cit : it->second) {
-          pallet.push_back(cit);
+        if (!inv) {
+          for (auto& cit : it->second) {
+            pallet.push_back(cit);
+          }
+        } else {
+          for (int i = it->second.size() - 1; i >= 0; --i) {
+            pallet.push_back(it->second[i]);
+          }
         }
       }
     }
@@ -136,7 +144,7 @@ std::vector<uint32_t> get_pallet(const std::string& palstr) {
   if (current[0] == '#') {
     pallet.push_back(rgb(current));
   } else if (current[current.find_last_of('-') + 1] <= 57) {
-    std::string color = current.substr(0, current.find_last_of('-') - 1);
+    std::string color = current.substr(0, current.find_last_of('-'));
     std::size_t id = stoul(current.substr(current.find_last_of('-') + 1));
     std::map<std::string, std::vector<uint32_t>>::iterator it;
     if ((it = material_colors_.find(color)) != material_colors_.end()) {
@@ -150,11 +158,18 @@ std::vector<uint32_t> get_pallet(const std::string& palstr) {
       pallet.push_back(it->second[id]);
     }
   } else {
-    std::string color = current.substr(0, current.size() - 1);
+    bool inv = current[0] == 'n';
+    std::string color = current.substr(inv, current.size() - 1 - inv);
     std::map<std::string, std::vector<uint32_t>>::iterator it;
     if ((it = material_colors_.find(color)) != material_colors_.end()) {
-      for (auto& cit : it->second) {
-        pallet.push_back(cit);
+      if (!inv) {
+        for (auto& cit : it->second) {
+          pallet.push_back(cit);
+        }
+      } else {
+        for (int i = it->second.size() - 1; i >= 0; --i) {
+          pallet.push_back(it->second[i]);
+        }
       }
     }
   }
@@ -171,7 +186,7 @@ uint32_t rgb(const uint8_t& r, const uint8_t& g, const uint8_t& b) {
 }
 uint32_t rgb(const std::string& hex) {
   bool pound = (hex[0] == '#');
-  char rs[3], gs[3], bs[3];
+  char rs[3] = "00", gs[3] = "00", bs[3] = "00";
   strncpy(rs, hex.c_str() + 0 + pound, 2);
   strncpy(gs, hex.c_str() + 2 + pound, 2);
   strncpy(bs, hex.c_str() + 4 + pound, 2);

@@ -128,9 +128,9 @@ delaunay::generate_mesh(opts::ParseResult args, const unsigned& w,
   if (args["pslg"].count) {
     info("NEED TO LOAD PSLG");
   } else {
-    info("GENERATING PSLG");
+    // info("GENERATING PSLG");
     if (args["mesh"].count) {
-      info("Generating mesh");
+      // info("Generating mesh");
       double stddev = args["stddev"].as<double>();
       double spacing = args["spacing"].as<double>();
       std::random_device rd;
@@ -209,6 +209,10 @@ void delaunay::main(opts::ParseResult args) {
     }
   }
 
+  success("Saving image as " + args["output"].as<std::string>() + '.' +
+          args["extension"].as<std::string>());
   img.save(args["output"].as<std::string>() + '.' +
            args["extension"].as<std::string>());
+  // img.save(args["output"].as<std::string>() + '.' + "svg");
+  // img.save(args["output"].as<std::string>() + '.' + "png");
 }

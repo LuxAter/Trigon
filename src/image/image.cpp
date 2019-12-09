@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <map>
 #include <string>
 #include <vector>
@@ -29,6 +30,11 @@ Image::Image(const std::string& file_path) {
     pixels_ = res.second;
     type = RASTERIZED;
   } else if (endswith(file_path, ".jpeg")) {
+    auto res = read_jpeg(file_path);
+    width_ = res.first[0];
+    height_ = res.first[1];
+    pixels_ = res.second;
+    type = RASTERIZED;
   } else {
     error("Unrecognized input image type \"" + file_path + "\"");
   }
@@ -50,7 +56,7 @@ bool Image::save(const std::string& file_path) {
     return write_png(file_path, width_, height_, pixels_);
   } else if (endswith(file_path, ".jpeg")) {
     rasterize();
-    // write_png(file_path, width_, height_, pixels_);
+    return write_jpeg(file_path, width_, height_, pixels_);
   } else {
     error("Unrecognize output image type \"" + file_path + "\"");
     return false;
@@ -132,6 +138,13 @@ void Image::rasterize() {
       }
     }
   }
+
+  // for (std::size_t y = 0; y < height_; ++y) {
+  //   for (std::size_t x = 0; x < width_; ++x) {
+  //     std::cout << fmt::get_hex(pixels_[y * width_ + x]) << ' ';
+  //   }
+  //   std::cout << '\n';
+  // }
 }
 
 void Image::fill(const COLOR& c) {

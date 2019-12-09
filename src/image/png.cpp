@@ -77,12 +77,6 @@ std::pair<std::array<unsigned, 2>, std::vector<COLOR>> read_png(
   res.first = {w, h};
   res.second = std::vector<COLOR>(w * h, 0x0);
 
-  warning("BIT DEPTH: " + std::to_string(bit_depth));
-  warning("COLOR TYPE: " + std::to_string(color_type));
-  warning("RGB TYPE: " + std::to_string(PNG_COLOR_TYPE_RGB));
-  warning("WIDTH:  " + std::to_string(w));
-  warning("HEIGHT: " + std::to_string(h));
-
   for (unsigned i = 0; i < h; ++i) {
     for (unsigned j = 0; j < w; ++j) {
       uint32_t id = j * 3;

@@ -52,6 +52,10 @@ int main(int argc, char* argv[]) {
 
   auto args = parser.parse(argc, argv);
 
+  // for (auto& it : args) {
+  //   std::cout << it.first << ":" << it.second.value << "\n";
+  // }
+
   if (args["help"].count) {
     // std::cout << options.help() << std::endl;
     return 0;
@@ -79,9 +83,6 @@ int main(int argc, char* argv[]) {
   } else {
     error("'mode' is required");
     return 1;
-  }
-  for (auto& it : args) {
-    std::cout << it.first << ":" << it.second.value << "\n";
   }
   return 0;
 }
